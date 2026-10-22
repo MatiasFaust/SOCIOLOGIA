@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Cuestionario interactivo sobre interaccionismo simbólico: 4 situaciones cotidianas.">
+<title>¿Qué significa?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: una tarjeta centrada por pregunta, como una conversación; barra de progreso arriba */
+:root{
+  --bg:#F3F7FC; --surface:#FFFFFF; --ink:#0E1E3D; --ink-2:#4A5A78;
+  --navy:#0F2A5C; --celeste:#5BB4E8; --celeste-soft:#E3F2FC;
+  --violet:#7B5CD6; --violet-soft:#EEE9FB; --line:#D8E3F0;
+  --ok:#1E8A5A; --ok-soft:#E3F5EC; --bad:#C2413A; --bad-soft:#FBE9E7;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0A1328; --surface:#122042; --ink:#EAF2FB; --ink-2:#A9B9D3;
+  --navy:#0B1A38; --celeste:#7CC6F0; --celeste-soft:#173562;
+  --violet:#A58BF0; --violet-soft:#2A2457; --line:#24396A;
+  --ok:#5FD39C; --ok-soft:#173D33; --bad:#F08A82; --bad-soft:#47201F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0A1328; --surface:#122042; --ink:#EAF2FB; --ink-2:#A9B9D3;
+  --navy:#0B1A38; --celeste:#7CC6F0; --celeste-soft:#173562;
+  --violet:#A58BF0; --violet-soft:#2A2457; --line:#24396A;
+  --ok:#5FD39C; --ok-soft:#173D33; --bad:#F08A82; --bad-soft:#47201F; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+.top{background:#0F2A5C;color:#fff;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:28px max(16px,env(safe-area-inset-left,0px)) 64px;}
+.top-in{max-width:640px;margin:0 auto}
+.eyebrow{font:600 12px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:#9FD6F6}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,6vw,40px);line-height:1.05;margin:10px 0 8px;text-wrap:balance}
+h1 em{font-style:normal;color:#BFA9FF}
+.lead{color:#CFE0F5;margin:0;max-width:52ch}
+main{max-width:640px;margin:-40px auto 0;position:relative}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:0 10px 30px rgba(15,42,92,.10)}
+.progress{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.bar{flex:1;height:6px;background:var(--celeste-soft);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--celeste),var(--violet));width:0;transition:width .4s}
+.count{font:600 13px var(--body);color:var(--ink-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;font:600 12px var(--body);letter-spacing:.06em;text-transform:uppercase;color:var(--violet);background:var(--violet-soft);padding:5px 10px;border-radius:99px}
+.scene{margin:14px 0 6px;padding:14px 16px;border-left:3px solid var(--celeste);background:var(--celeste-soft);border-radius:0 12px 12px 0;color:var(--ink)}
+h2{font-family:var(--display);font-weight:700;font-size:21px;line-height:1.25;margin:14px 0 14px;text-wrap:balance}
+.opts{display:grid;gap:10px}
+.opt{all:unset;box-sizing:border-box;display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;cursor:pointer;background:var(--surface);color:var(--ink);transition:border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--celeste)}
+.opt:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
+.opt b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--celeste-soft);color:var(--navy);font:700 13px var(--body)}
+:root[data-theme="dark"] .opt b{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .opt b{color:var(--ink)}}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok b{background:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.opt.bad b{background:var(--bad);color:#fff}
+.opt[disabled]{cursor:default}
+.fb{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--violet-soft)}
+.fb strong{display:block;font-family:var(--display);font-size:17px;margin-bottom:4px}
+.fb .concept{display:block;margin-top:8px;font-size:13px;color:var(--ink-2)}
+.actions{display:flex;justify-content:flex-end;margin-top:16px}
+.btn{all:unset;cursor:pointer;background:var(--navy);color:#fff;font:700 15px var(--body);padding:12px 20px;border-radius:99px}
+:root[data-theme="dark"] .btn{background:var(--violet)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn{background:var(--violet)}}
+.btn:focus-visible{outline:3px solid var(--celeste);outline-offset:3px}
+.score{font-family:var(--display);font-weight:800;font-size:64px;line-height:1;color:var(--violet);font-variant-numeric:tabular-nums}
+.score small{font-size:28px;color:var(--ink-2)}
+.review{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:8px}
+.review li{display:flex;gap:10px;font-size:15px;padding:10px 12px;border-radius:10px;background:var(--bg)}
+.review .m{font-weight:700;flex:none}
+.foot{max-width:640px;margin:22px auto 0;font-size:13px;color:var(--ink-2);text-align:center}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="eyebrow">Lo cotidiano, bajo la lupa de la sociología</div>
+  <h1>¿Qué <em>significa</em> lo que hacemos?</h1>
+  <p class="lead">Cuatro situaciones de todos los días. Elegí la interpretación que mejor explica el interaccionismo simbólico de Mead y Blumer.</p>
+</div></header>
+
+<main>
+  <section class="card" id="quiz" aria-live="polite"></section>
+</main>
+<p class="foot">Recurso complementario de la infografía “¿Por qué actuamos como actuamos?” · Sociología, 6.º año</p>
+
+<script>
+const Q = [
+  {tag:"El mate",
+   scene:"Estás en una ronda de mate con gente que recién conocés. El que ceba te pasa el mate a vos también.",
+   q:"Desde el interaccionismo simbólico, ¿qué está pasando?",
+   o:["Nada especial: es solo una bebida caliente con yerba.",
+      "Es un gesto de inclusión, y lo entendemos así porque aprendimos ese significado interactuando con otros.",
+      "Es una regla escrita que todos los uruguayos tienen que cumplir.",
+      "Es un instinto natural que traemos desde que nacemos."],
+   a:1,
+   why:"El mate como objeto es yerba y agua. Lo que lo vuelve “confianza” o “sos parte del grupo” es un significado compartido que se aprende en la interacción. Por eso alguien de otra cultura puede verlo de otra forma.",
+   concept:"Premisas 1 y 2 de Blumer: actuamos según el significado de las cosas, y ese significado nace de la interacción."},
+  {tag:"WhatsApp",
+   scene:"Le mandás a un amigo un audio largo contándole un problema. Te contesta solamente: 👍",
+   q:"¿Por qué ese pulgar puede caerte mal, si en otro chat no te molestaría?",
+   o:["Porque el emoji tiene un significado fijo y siempre es negativo.",
+      "Porque el significado no está en el emoji, sino en cómo lo interpretamos según el contexto y la relación.",
+      "Porque los emojis no comunican nada.",
+      "Porque tu amigo seguro está enojado."],
+   a:1,
+   why:"El mismo 👍 es “dale, perfecto” si confirmás una hora, pero puede leerse como frialdad después de algo importante. Interpretamos el símbolo según la situación, y esa interpretación puede equivocarse.",
+   concept:"Premisa 3 de Blumer: los significados se manejan y se modifican mediante un proceso interpretativo."},
+  {tag:"El liceo",
+   scene:"A un compañero todos le dicen “el problemático”. Con el tiempo, él empieza a comportarse así y a decir “yo soy así”.",
+   q:"¿Qué idea de Mead ayuda a entenderlo?",
+   o:["La identidad es algo fijo que no cambia.",
+      "Construimos la imagen de nosotros mismos (el self) en parte a partir de cómo nos ven y nos tratan los demás.",
+      "La forma de ser depende solo de la genética.",
+      "Lo que piensan los demás no influye en nadie."],
+   a:1,
+   why:"Para Mead la persona (self) se forma en la interacción: nos vemos a nosotros mismos poniéndonos en el lugar de los otros. Por eso una etiqueta repetida puede terminar formando parte de cómo alguien se ve.",
+   concept:"Mead: el self y el “mí” (la parte que incorpora la mirada de los demás)."},
+  {tag:"El fútbol",
+   scene:"Un hincha ve una camiseta de su cuadro colgada en una ventana. Para él es orgullo; para el hincha rival, es la camiseta “de los otros”.",
+   q:"¿Qué muestra esta situación?",
+   o:["Que la tela de la camiseta tiene distinto valor.",
+      "Que un mismo objeto puede funcionar como símbolo de pertenencia y significar cosas distintas según el grupo.",
+      "Que el fútbol no tiene nada que ver con la sociología.",
+      "Que solo los hinchas fanáticos interpretan símbolos."],
+   a:1,
+   why:"Colores, escudo y canciones son símbolos: marcan un “nosotros” y un “ellos”. El significado lo construye cada grupo en su historia de interacciones; por eso la misma camiseta genera orgullo en unos y rivalidad en otros.",
+   concept:"Símbolos y significados compartidos dentro de un grupo; identidad colectiva."}
+];
+const L = ["A","B","C","D"];
+let i = 0, score = 0, picks = [];
+const box = document.getElementById("quiz");
+
+function render(){
+  const q = Q[i];
+  box.innerHTML = `
+    <div class="progress"><div class="bar"><i style="width:${(i/Q.length)*100}%"></i></div>
+      <span class="count">${i+1} de ${Q.length}</span></div>
+    <span class="tag">${q.tag}</span>
+    <p class="scene">${q.scene}</p>
+    <h2>${q.q}</h2>
+    <div class="opts">${q.o.map((t,k)=>`<button class="opt" id="opt-${i}-${k}" data-k="${k}"><b>${L[k]}</b><span>${t}</span></button>`).join("")}</div>
+    <div id="fb"></div>`;
+  box.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>pick(+b.dataset.k)));
+  const first = box.querySelector(".opt"); if(first && i>0) first.focus({preventScroll:true});
+}
+function pick(k){
+  const q = Q[i], right = k===q.a;
+  if(right) score++;
+  picks.push(right);
+  box.querySelectorAll(".opt").forEach(b=>{
+    const kk=+b.dataset.k; b.disabled=true;
+    if(kk===q.a) b.classList.add("ok"); else if(kk===k) b.classList.add("bad");
+  });
+  box.querySelector(".bar i").style.width = `${((i+1)/Q.length)*100}%`;
+  document.getElementById("fb").innerHTML = `
+    <div class="fb"><strong>${right?"¡Bien interpretado!":"Mirala de nuevo"}</strong>${q.why}
+      <span class="concept">${q.concept}</span></div>
+    <div class="actions"><button class="btn" id="next">${i<Q.length-1?"Siguiente situación":"Ver mi resultado"}</button></div>`;
+  const n = document.getElementById("next");
+  n.addEventListener("click",()=>{ i++; i<Q.length?render():end(); });
+  n.focus({preventScroll:true});
+}
+function end(){
+  const msg = score===4 ? "Leíste cada situación como lo haría un sociólogo." :
+              score>=2 ? "Vas bien. Repasá las premisas de Blumer y la idea de self en Mead." :
+              "Volvé a mirar la infografía y probá otra vez: la clave es que el significado se construye entre personas.";
+  box.innerHTML = `
+    <span class="tag">Resultado</span>
+    <p class="score">${score}<small>/4</small></p>
+    <h2 style="margin-top:8px">${msg}</h2>
+    <ul class="review">${Q.map((q,k)=>`<li><span class="m" style="color:var(${picks[k]?"--ok":"--bad"})">${picks[k]?"✓":"✗"}</span><span><b>${q.tag}:</b> ${q.concept}</span></li>`).join("")}</ul>
+    <p style="margin:16px 0 0;color:var(--ink-2)">Idea para llevarte: ningún gesto trae su significado incluido; lo construimos entre todos, cada día.</p>
+    <div class="actions"><button class="btn" id="again">Volver a jugar</button></div>`;
+  document.getElementById("again").addEventListener("click",()=>{i=0;score=0;picks=[];render();});
+}
+render();
+</script>
+</body>
+</html>
